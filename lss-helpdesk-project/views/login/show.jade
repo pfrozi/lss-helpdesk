@@ -1,6 +1,6 @@
 extends ../layout
 
-block content
+block menu
     link(rel='stylesheet', href='/stylesheets/signin.css')
     link(rel='stylesheet', href='/stylesheets/box-with-shadows.css')
     div.container
@@ -8,7 +8,7 @@ block content
             h2.text-primary LSSHelpDesk :)
     div.container
         form.form-signin#formLogin(name="frmlogin",method="post",action="/login")
-            h2.form-signin-heading Bem-Vindos
+            h2.form-signin-heading.text-center Bem-Vindos!
             label.sr-only(for="inputNick") Usuário:
             if oldNick
                 input.form-control#inputNick(type="text", placeholder="Ex. pfrozi", name="nick", value="#{oldNick}",required, autofocus)

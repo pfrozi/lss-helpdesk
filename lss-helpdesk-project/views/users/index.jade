@@ -1,4 +1,9 @@
-extends ../layout
+if (user.type=="D")
+    extends ../menus/developer
+else if (user.type=="C")
+    extends ../menus/customer
+else
+    extends ../menus/customer
 
 block content
     h1.
@@ -10,10 +15,9 @@ block content
                 = user.nick
                 = user._id
                 form(action='/users/#{user._id}/edit',method='post',enctype='application/x-www-form-urlencoded')
-                    input(type='hidden',value='DELETE',name='_method')
-                    button(type='submit').
-                        Delete
                 p
                     a(href='/users/#{user._id}/edit') Edit
                 p
                     a(href='/users/#{user._id}') Show
+                p
+                    a(href='/users/#{user._id}/delete') Delete

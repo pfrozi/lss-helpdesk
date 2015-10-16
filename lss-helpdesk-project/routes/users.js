@@ -49,12 +49,14 @@ router.route('/')
         var name     = req.body.name;
         var nick     = req.body.nick;
         var password = req.body.password;
+        var tp       = req.body.type;
 
         //call the create function for our database
         mongoose.model('User').create({
             name     : name,
             nick     : nick,
-            password : password
+            password : password,
+            type     : tp
         }, function (err, user) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
@@ -75,7 +77,7 @@ router.route('/')
                     }
                 });
               }
-        })
+        });
     });
 
 /* GET New user page. */
@@ -135,8 +137,9 @@ router.route('/:id')
     });
   });
 
-  //GET the individual blob by Mongo ID
-  router.get('/:id/edit', function(req, res) {
+//GET the individual blob by Mongo ID
+router
+    .get('/:id/edit', function(req, res) {
       //search for the blob within Mongo
       mongoose.model('User').findById(req.id, function (err, user) {
           if (err) {
@@ -159,17 +162,61 @@ router.route('/:id')
               });
           }
       });
-  });
+});
+router
+    .put('/:id/edit', function(req, res) {
+        // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
+        var name     = req.body.name;
+        var nick     = req.body.nick;
+        var password = req.body.password;
+        var tp       = req.body.type;
+
+        mongoose.model('User').findById(req.id, function (err, user) {
+              if (err) {
+                  res.send("There was a problem adding the information to the database.");
+              } else {
+                  user.update({
+                          name:name
+                        , nick:nick
+                        , password:password
+                        , type:tp
+
+                      }, function (err, userUp) {
+                            if (err) {
+                                res.send("There was a problem adding the information to the database.");
+                            } else {
+
+                                mongoose.model('User').findById(req.id, function(err, newUser) {
+                                    console.log('PUT editing new user: ' + userUp);
+                                    res.format({
+                                      html: function(){
+                                          res.render('users/show', {
+                                            "user" : newUser
+                                          });
+                                      },
+                                      json: function(){
+                                          res.json(userUp);
+                                      }
+                                    });
+                                });
+
+                            }
+                  });
+              }
+        });
+
+});
+
 
   //DELETE a User by ID
-  router.delete('/:id/edit', function (req, res){
+  router.get('/:id/delete', function (req, res){
       //find blob by ID
       mongoose.model('User').findById(req.id, function (err, user) {
           if (err) {
               return console.error(err);
           } else {
               //remove it from Mongo
-              blob.remove(function (err, user) {
+              user.remove(function (err, userRem) {
                   if (err) {
                       return console.error(err);
                   } else {

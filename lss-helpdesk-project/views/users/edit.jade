@@ -1,4 +1,9 @@
-extends ../layout
+if (user.type=="D")
+    extends ../menus/developer
+else if (user.type=="C")
+    extends ../menus/customer
+else
+    extends ../menus/customer
 
 block content
     h1.
@@ -7,9 +12,11 @@ block content
         p Name: 
             input#inputName(type='text', value='#{user.name}', name='name')
         p Nick: 
-            input#inputBadge(type='text', value='#{user.nick}', name='nick')
+            input#inputNick(type='text', value='#{user.nick}', name='nick')
         p Password: 
-            input#inputDob(type='password', value='#{user.password}', name='password')
+            input#inputPass(type='password', value='#{user.password}', name='password')
+        p Type: 
+            input#inputType(type='text', value='#{user.type}', name='type')
         p 
             input(type='hidden',value='PUT',name='_method')
         p 
