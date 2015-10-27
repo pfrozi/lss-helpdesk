@@ -21,14 +21,14 @@ router.use(methodOverride(function(req, res){
 router.route('/')
     //GET all users
     .get(function(req, res, next) {
-        //retrieve all blobs from Monogo
+
         mongoose.model('User').find({}, function (err, users) {
               if (err) {
                   return console.error(err);
               } else {
                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
                   res.format({
-                      //HTML response will render the index.jade file in the views/blobs folder. We are also setting "blobs" to be an accessible variable in our jade view
+
                     html: function(){
                         res.render('users/index', {
                               title: 'Lista de Usuários',
@@ -66,12 +66,13 @@ router.route('/')
                   res.format({
                       //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
                     html: function(){
+
                         // If it worked, set the header so the address bar doesn't still say /adduser
                         res.location("users");
                         // And forward to success page
                         res.redirect("/users");
                     },
-                    //JSON response will show the newly created blob
+                    //JSON response
                     json: function(){
                         res.json(user);
                     }
@@ -87,7 +88,7 @@ router.get('/new', function(req, res) {
 
 // route middleware to validate :id
 router.param('id', function(req, res, next, id) {
-    //console.log('validating ' + id + ' exists');
+
     //find the ID in the Database
     mongoose.model('User').findById(id, function (err, user) {
         //if it isn't found, we are going to repond with 404
@@ -106,11 +107,9 @@ router.param('id', function(req, res, next, id) {
             });
         //if it is found we continue on
         } else {
-            //uncomment this next line if you want to see every JSON document response for every GET/PUT/DELETE call
-            //console.log(blob);
             // once validation is done save the new item in the req
             req.id = id;
-            // go to the next thing
+            // go to the next thing (kick-off to callback)
             next();
         }
     });
@@ -137,15 +136,15 @@ router.route('/:id')
     });
   });
 
-//GET the individual blob by Mongo ID
+//GET the individual item by Mongo ID
 router
     .get('/:id/edit', function(req, res) {
-      //search for the blob within Mongo
+      //search for the user within Mongo
       mongoose.model('User').findById(req.id, function (err, user) {
           if (err) {
               console.log('GET Error: There was a problem retrieving: ' + err);
           } else {
-              //Return the blob
+              //Return the user
               console.log('GET Retrieving ID: ' + user._id);
               //format the date properly for the value to show correctly in our edit form
               res.format({
@@ -210,7 +209,7 @@ router
 
   //DELETE a User by ID
   router.get('/:id/delete', function (req, res){
-      //find blob by ID
+      //find user by ID
       mongoose.model('User').findById(req.id, function (err, user) {
           if (err) {
               return console.error(err);

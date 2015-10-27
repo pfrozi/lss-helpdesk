@@ -1,8 +1,6 @@
-if (user.type=="D")
+if (userLog.type=='D')
     extends ../menus/developer
-else if (user.type=="C")
-    extends ../menus/customer
-else
+else if (userLog.type=='C')
     extends ../menus/customer
 
 block content
@@ -21,3 +19,7 @@ block content
                     a(href='/users/#{user._id}') Show
                 p
                     a(href='/users/#{user._id}/delete') Delete
+    
+//                
+    p #{userLog.Nick}
+    p #{userLog.type}

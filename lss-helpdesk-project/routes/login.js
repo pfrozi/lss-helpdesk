@@ -22,45 +22,61 @@ router.route('/')
     })
     //POST to login user
     .post(function(req, res) {
-        // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
         var nick     = req.body.nick;
         var password = req.body.password;
 
-        //call the create function for our database
         mongoose.model('User').find({
-            nick     : nick,
-            password : password
-        }, function (err, user) {
-              if (err) {
-                  res.render('login/show', { title: 'Login'
-                  , message: "Desculpe, mas um erro não tratado ocorreu."
-                  , oldNick: nick });
+                nick     : nick,
+                password : password
+            },
+            function (err, user) {
+                if (err) {
+                res.render('login/show', { title: 'Login'
+                , message: "Desculpe, mas um erro não tratado ocorreu."
+                , oldNick: nick });
 
-              } else if(!user.length){
-                  res.render('login/show', { title: 'Login'
-                  , message:  "Usuário não encontrado ou senha inválida."
-                  , oldNick: nick });
+                } else if(!user.length){
+                    res.render('login/show', {
+                            title: 'Login',
+                            message: "Usuário não encontrado ou senha inválida.",
+                            oldNick: nick
+                        }
+                    );
 
-              } else {
-                  //user has been created
-                  console.log('User login: ' + user);
-                  res.format({
-                      //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
-                    html: function(){
-                        // If it worked, set the header so the address bar doesn't still say /adduser
-                        res.location("users");
-                        // And forward to success page
-                        res.redirect("/users");
-                    },
-                    //JSON response will show the newly created blob
-                    json: function(){
-                        res.json(user);
+                } else {
+                    console.log('User login: ' + user);
+
+                    // Verifying the type of user. If user doesn't have a defined type, customer is used by default
+                    if(user.type=='D'){
+                        res.format({
+                            html: function(){
+                                res.location("users");
+                                res.render('users', {
+                                    userLog : user
+                                });
+                            },
+                            json: function(){
+                                res.json(user);
+                            }
+                        });
+                    } else{
+                        res.format({
+                            html: function(){
+                                res.location("users");
+                                res.render('users', {
+                                    userLog : user
+                                });
+                            },
+                            json: function(){
+                                res.json(user);
+                            }
+                        });
                     }
-                });
-              }
-        })
-    });
+                }
+            }
+        );
 
-
+    }
+);
 
 module.exports = router;
