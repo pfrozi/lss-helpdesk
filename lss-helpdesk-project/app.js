@@ -1,18 +1,23 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
+var express      = require('express');
+var path         = require('path');
+var favicon      = require('serve-favicon');
+var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var bodyParser   = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var login = require('./routes/login');
+// controllers
+var routes       = require('./routes/index');
+var users        = require('./routes/users');
+var login        = require('./routes/login');
+var requisitions = require('./routes/reqs');
 
 // db variables
 var db = require("./model/db");
+
 // mongoose schemas
-var user = require('./model/users');
+var user        = require('./model/users');
+var requisition = require('./model/requisition');
+
 
 var app = express();
 
@@ -30,9 +35,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
 
+// map
 app.use('/', routes);
 app.use('/users', users);
 app.use('/login', login);
+app.use('/reqs', requisitions);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

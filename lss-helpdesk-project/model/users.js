@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
 
-// after tests, we'll include more fields
 var userSchema = new mongoose.Schema({
     name:     String,
     nick:     String,
