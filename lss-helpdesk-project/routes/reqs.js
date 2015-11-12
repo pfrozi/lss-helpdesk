@@ -19,7 +19,7 @@ router.use(methodOverride(function(req, res){
 //build the REST operations at the base for requesitions
 //this will be accessible from http://127.0.0.1:3000/reqs if the default route for / is left unchanged
 router.route('/')
-    //GET all requisitions
+    //GET all requisitions, showing a list of reqs
     .get(function(req, res, next) {
 
         mongoose.model('Requisition').find({}, function (err, reqs) {
@@ -31,7 +31,7 @@ router.route('/')
 
                     html: function(){
                         res.render('reqs/index', {
-                              title: 'Lista de Pedidos',
+                              title: 'Lista de Todos os Pedidos',
                               "reqs" : reqs
                           });
                     },
@@ -44,6 +44,7 @@ router.route('/')
         });
     })
     //POST a new requisition
+    //called when the user click in a post button
     .post(function(req, res) {
         // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
         var title       = req.body.title;
@@ -53,29 +54,30 @@ router.route('/')
         var modules     = req.body.modules;
 
         //call the create function for our database
-        mongoose.model('User').create({
-            name     : name,
-            nick     : nick,
-            password : password,
-            type     : tp
-        }, function (err, user) {
+        mongoose.model('Requisition').create({
+            title       : title,
+            description : description,
+            priority    : priority,
+            tags        : tags,
+            modules     : modules
+        }, function (err, requisition) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
               } else {
                   //user has been created
-                  console.log('POST creating new user: ' + user);
+                  console.log('POST creating new requisition: ' + requisition);
                   res.format({
                       //HTML response will set the location and redirect back to the home page. You could also create a 'success' page if that's your thing
                     html: function(){
 
                         // If it worked, set the header so the address bar doesn't still say /adduser
-                        res.location("users");
+                        res.location("reqs");
                         // And forward to success page
-                        res.redirect("/users");
+                        res.redirect("/reqs");
                     },
                     //JSON response
                     json: function(){
-                        res.json(user);
+                        res.json(requisition);
                     }
                 });
               }
@@ -84,14 +86,14 @@ router.route('/')
 
 /* GET New user page. */
 router.get('/new', function(req, res) {
-    res.render('users/new', { title: 'Add New User' });
+    res.render('reqs/new', { title: 'Adicionar Novo Pedido' });
 });
 
 // route middleware to validate :id
 router.param('id', function(req, res, next, id) {
 
     //find the ID in the Database
-    mongoose.model('User').findById(id, function (err, user) {
+    mongoose.model('Requisition').findById(id, function (err, requisition) {
         //if it isn't found, we are going to repond with 404
         if (err) {
             console.log(id + ' was not found');
@@ -116,21 +118,22 @@ router.param('id', function(req, res, next, id) {
     });
 });
 
+// just show a requisition
 router.route('/:id')
   .get(function(req, res) {
-    mongoose.model('User').findById(req.id, function (err, user) {
+    mongoose.model('Requisition').findById(req.id, function (err, requisition) {
       if (err) {
         console.log('GET Error: There was a problem retrieving: ' + err);
       } else {
-        console.log('GET Retrieving ID: ' + user._id);
+        console.log('GET Retrieving ID: ' + requisition._id);
         res.format({
           html: function(){
-              res.render('users/show', {
-                "user" : user
+              res.render('reqs/show', {
+                "requisition" : requisition
               });
           },
           json: function(){
-              res.json(user);
+              res.json(requisition);
           }
         });
       }
@@ -141,18 +144,18 @@ router.route('/:id')
 router
     .get('/:id/edit', function(req, res) {
       //search for the user within Mongo
-      mongoose.model('User').findById(req.id, function (err, user) {
+      mongoose.model('Requisition').findById(req.id, function (err, requisition) {
           if (err) {
               console.log('GET Error: There was a problem retrieving: ' + err);
           } else {
-              //Return the user
-              console.log('GET Retrieving ID: ' + user._id);
+              //Return the requisition
+              console.log('GET Retrieving ID: ' + requisition._id);
               //format the date properly for the value to show correctly in our edit form
               res.format({
                   //HTML response will render the 'edit.jade' template
                   html: function(){
-                         res.render('users/edit', {
-                            user: user
+                         res.render('reqs/edit', {
+                            requisition: requisition
                         });
                    },
                    //JSON response will return the JSON output
@@ -166,36 +169,39 @@ router
 router
     .put('/:id/edit', function(req, res) {
         // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
-        var name     = req.body.name;
-        var nick     = req.body.nick;
-        var password = req.body.password;
-        var tp       = req.body.type;
+        var title       = req.body.title;
+        var description = req.body.description;
+        var priority    = req.body.priority;
+        var tags        = req.body.tags;
+        var modules     = req.body.modules;
 
-        mongoose.model('User').findById(req.id, function (err, user) {
+        mongoose.model('Requisition').findById(req.id, function (err, requisition) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
               } else {
-                  user.update({
-                          name:name
-                        , nick:nick
-                        , password:password
-                        , type:tp
+                  requisition.update({
+                          title       : title
+                        , description : description
+                        , priority    : priority
+                        , tags        : tags
+                        , modules     : modules
+                        , modified    : new Date()
 
-                      }, function (err, userUp) {
+                    }, function (err, reqUp) {
                             if (err) {
                                 res.send("There was a problem adding the information to the database.");
                             } else {
 
-                                mongoose.model('User').findById(req.id, function(err, newUser) {
-                                    console.log('PUT editing new user: ' + userUp);
+                                mongoose.model('Requisition').findById(req.id, function(err, newReq) {
+                                    console.log('PUT editing new user: ' + reqUp);
                                     res.format({
                                       html: function(){
-                                          res.render('users/show', {
-                                            "user" : newUser
+                                          res.render('reqs/show', {
+                                            "requisition" : newReq
                                           });
                                       },
                                       json: function(){
-                                          res.json(userUp);
+                                          res.json(reqUp);
                                       }
                                     });
                                 });
@@ -207,30 +213,29 @@ router
 
 });
 
-
   //DELETE a User by ID
   router.get('/:id/delete', function (req, res){
       //find user by ID
-      mongoose.model('User').findById(req.id, function (err, user) {
+      mongoose.model('Requisition').findById(req.id, function (err, requisition) {
           if (err) {
               return console.error(err);
           } else {
               //remove it from Mongo
-              user.remove(function (err, userRem) {
+              user.remove(function (err, reqRem) {
                   if (err) {
                       return console.error(err);
                   } else {
                       //Returning success messages saying it was deleted
-                      console.log('DELETE removing ID: ' + user._id);
+                      console.log('DELETE removing ID: ' + requisition._id);
                       res.format({
                           //HTML returns us back to the main page, or you can create a success page
                             html: function(){
-                                 res.redirect("/users");
+                                 res.redirect("/reqs");
                            },
                            //JSON returns the item with the message that is has been deleted
                           json: function(){
                                  res.json({message : 'deleted',
-                                     item : user
+                                     item : requisition
                                  });
                            }
                         });
