@@ -1,0 +1,25 @@
+if (userLog.type=='D')
+    extends ../menus/developer
+else if (userLog.type=='C')
+    extends ../menus/customer
+
+block content
+    h1.
+         #{title}
+    table.table.table-hover
+        thead
+            tr
+                th o
+                th Descrição
+                th Respostas
+                th Visitas
+                th Modificado Em
+        tbody
+            - each req, in reqs
+                tr
+                    td o
+                    td 
+                        a(href='/reqs/#{req._id}/show') #{req.description}
+                    td 0
+                    td 0
+                    td #{req.modified}

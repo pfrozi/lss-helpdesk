@@ -213,37 +213,37 @@ router
 
 });
 
-  //DELETE a User by ID
-  router.get('/:id/delete', function (req, res){
-      //find user by ID
-      mongoose.model('Requisition').findById(req.id, function (err, requisition) {
-          if (err) {
-              return console.error(err);
-          } else {
-              //remove it from Mongo
-              user.remove(function (err, reqRem) {
-                  if (err) {
-                      return console.error(err);
-                  } else {
-                      //Returning success messages saying it was deleted
-                      console.log('DELETE removing ID: ' + requisition._id);
-                      res.format({
-                          //HTML returns us back to the main page, or you can create a success page
-                            html: function(){
-                                 res.redirect("/reqs");
-                           },
-                           //JSON returns the item with the message that is has been deleted
-                          json: function(){
-                                 res.json({message : 'deleted',
-                                     item : requisition
-                                 });
-                           }
-                        });
-                  }
-              });
-          }
-      });
-  });
+//DELETE a User by ID
+router.get('/:id/delete', function (req, res){
+    //find user by ID
+    mongoose.model('Requisition').findById(req.id, function (err, requisition) {
+        if (err) {
+            return console.error(err);
+        } else {
+            //remove it from Mongo
+            user.remove(function (err, requisitionRem) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    //Returning success messages saying it was deleted
+                    console.log('DELETE removing ID: ' + requisition._id);
+                    res.format({
+                        //HTML returns us back to the main page, or you can create a success page
+                          html: function(){
+                               res.redirect("/reqs");
+                         },
+                         //JSON returns the item with the message that is has been deleted
+                        json: function(){
+                               res.json({message : 'deleted',
+                                   item : requisition
+                               });
+                         }
+                      });
+                }
+            });
+        }
+    });
+});
 
 // Export all of routes
 module.exports = router;
