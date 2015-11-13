@@ -26,13 +26,19 @@ router.route('/')
               if (err) {
                   return console.error(err);
               } else {
+                  var userLog  = req.session.userLog;
+                  var userType = req.session.userType;
+                  console.log('Logged user.nick: '+ userLog.nick);
+                  console.log('Logged user.type: '+ userLog.type);
+
                   //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
                   res.format({
 
                     html: function(){
                         res.render('users/index', {
                               title: 'Lista de Usuários',
-                              "users" : users
+                              "users"   : users,
+                              "userLog" : userLog
                           });
                     },
                     //JSON response will show all user in JSON format

@@ -31,11 +31,13 @@ router.route('/')
             },
             function (err, user) {
                 if (err) {
-                res.render('login/show', { title: 'Login'
-                , message: "Desculpe, mas um erro não tratado ocorreu."
-                , oldNick: nick });
+                    console.log('Erro nao tratado.');
+                    res.render('login/show', { title: 'Login'
+                        , message: "Desculpe, mas um erro não tratado ocorreu."
+                        , oldNick: nick });
 
                 } else if(!user.length){
+                    console.log('Usuario nao encontrado ou senha invalida.');
                     res.render('login/show', {
                             title: 'Login',
                             message: "Usuário não encontrado ou senha inválida.",
@@ -46,14 +48,14 @@ router.route('/')
                 } else {
                     console.log('User login: ' + user);
 
+                    // store user data in session
+                    req.session.userLog  = user[0];
+
                     // Verifying the type of user. If user doesn't have a defined type, customer is used by default
                     if(user.type=='D'){
                         res.format({
                             html: function(){
-                                res.location("users");
-                                res.render('users', {
-                                    userLog : user
-                                });
+                                res.redirect("/users");
                             },
                             json: function(){
                                 res.json(user);
@@ -62,16 +64,15 @@ router.route('/')
                     } else{
                         res.format({
                             html: function(){
-                                res.location("users");
-                                res.render('users', {
-                                    userLog : user
-                                });
+                                res.redirect("/users");
                             },
                             json: function(){
                                 res.json(user);
                             }
                         });
                     }
+
+
                 }
             }
         );

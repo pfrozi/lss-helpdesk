@@ -1,11 +1,7 @@
-if (user.type=="D")
-    extends ../menus/developer
-else if (user.type=="C")
-    extends ../menus/customer
-else
-    extends ../menus/customer
+extends ../layout
 
 block content
+    
     h1.
         User ID #{user._id}
     form(action='/users/#{user._id}/edit',method='post',name='upuser',enctype='application/x-www-form-urlencoded')

@@ -1,12 +1,7 @@
-if user.type=="D"
-    extends ../menus/developer
-else if user.type="C"
-    extends ../menus/customer
-else
-    extends ../menus/customer
-
+extends ../layout
 
 block content
+    
     h1.
         ID: #{user._id}
     p Name: #{user.name}

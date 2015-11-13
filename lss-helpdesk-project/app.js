@@ -4,6 +4,9 @@ var favicon      = require('serve-favicon');
 var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
+var session      = require('express-session');
+//var MongoStore   = require('connect-mongo')(session);
+var mongoose     = require('mongoose');
 
 // controllers
 var routes       = require('./routes/index');
@@ -34,6 +37,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'));
+
+// session configuration
+var mysession = session({
+      secret: 'VouEmboraPraPasargada',
+      resave: true,
+      saveUninitialized: true,
+      cookie: { secure: false },
+      //store: new MongoStore({ mongooseConnection: mongoose.connection })
+});
+
+app.use(mysession);
 
 // map
 app.use('/', routes);

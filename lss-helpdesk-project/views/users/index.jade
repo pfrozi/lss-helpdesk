@@ -1,9 +1,7 @@
-if (userLog.type=='D')
-    extends ../menus/developer
-else if (userLog.type=='C')
-    extends ../menus/customer
+extends ../layout
 
 block content
+    
     h1.
          #{title}
     ul
@@ -20,6 +18,3 @@ block content
                 p
                     a(href='/users/#{user._id}/delete') Delete
     
-//                
-    p #{userLog.Nick}
-    p #{userLog.type}
