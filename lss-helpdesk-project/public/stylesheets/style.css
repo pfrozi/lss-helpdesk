@@ -21,3 +21,11 @@ a {
     background-color: #FFAAAA;
 
 }
+
+.bootstrap-tagsinput {
+    width: 100%;
+}
+
+.pointer {
+    cursor: pointer;
+}

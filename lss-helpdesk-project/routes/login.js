@@ -55,7 +55,7 @@ router.route('/')
                     if(user.type=='D'){
                         res.format({
                             html: function(){
-                                res.redirect("/users");
+                                res.redirect("/reqs");
                             },
                             json: function(){
                                 res.json(user);
@@ -64,7 +64,7 @@ router.route('/')
                     } else{
                         res.format({
                             html: function(){
-                                res.redirect("/users");
+                                res.redirect("/reqs");
                             },
                             json: function(){
                                 res.json(user);

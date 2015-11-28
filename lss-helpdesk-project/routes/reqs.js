@@ -22,6 +22,8 @@ router.route('/')
     //GET all requisitions, showing a list of reqs
     .get(function(req, res, next) {
 
+        var userLog  = req.session.userLog;
+
         mongoose.model('Requisition').find({}, function (err, reqs) {
               if (err) {
                   return console.error(err);
@@ -32,7 +34,8 @@ router.route('/')
                     html: function(){
                         res.render('reqs/index', {
                               title: 'Lista de Todos os Pedidos',
-                              "reqs" : reqs
+                              "reqs" : reqs,
+                              "userLog" : userLog
                           });
                     },
                     //JSON response will show all user in JSON format
@@ -47,19 +50,32 @@ router.route('/')
     //called when the user click in a post button
     .post(function(req, res) {
         // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
-        var title       = req.body.title;
-        var description = req.body.description;
-        var priority    = req.body.priority;
+        var title       = req.body.titulo;
+        var description = req.body.descricao;
         var tags        = req.body.tags;
-        var modules     = req.body.modules;
+        var modules     = req.body.modulos;
+        var category    = req.body.categoria;
+
+        console.log(category);
+        console.log(title);
+        console.log(description);
+        console.log(tags);
+        console.log(modules);
+
+        var partsOfTags    = tags.split(',');
+        var partsOfModules = modules.split(',');
+
+        console.log(partsOfTags);
+        console.log(partsOfModules);
 
         //call the create function for our database
         mongoose.model('Requisition').create({
+            category    : category,
             title       : title,
             description : description,
-            priority    : priority,
-            tags        : tags,
-            modules     : modules
+            priority    : 0,
+            tags        : partsOfTags,
+            modules     : partsOfModules
         }, function (err, requisition) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
@@ -82,11 +98,19 @@ router.route('/')
                 });
               }
         });
+
     });
 
 /* GET New user page. */
 router.get('/new', function(req, res) {
-    res.render('reqs/new', { title: 'Adicionar Novo Pedido' });
+
+    // get login session
+    var userLog  = req.session.userLog;
+    var userType = req.session.userType;
+    console.log('Logged user.nick: '+ userLog.nick);
+    console.log('Logged user.type: '+ userLog.type);
+
+    res.render('reqs/new', { title: 'Adicionar Novo Pedido',"userLog" : userLog });
 });
 
 // route middleware to validate :id
@@ -213,8 +237,24 @@ router
 
 });
 
-//DELETE a User by ID
+//DELETE a req by ID
 router.get('/:id/delete', function (req, res){
+
+    console.log("test");
+
+    res.format({
+        //HTML returns us back to the main page, or you can create a success page
+          html: function(){
+               res.redirect("/reqs");
+         },
+         //JSON returns the item with the message that is has been deleted
+        json: function(){
+               res.json({message : 'deleted',
+                   item : requisition
+               });
+         }
+      });
+/*
     //find user by ID
     mongoose.model('Requisition').findById(req.id, function (err, requisition) {
         if (err) {
@@ -243,6 +283,7 @@ router.get('/:id/delete', function (req, res){
             });
         }
     });
+    */
 });
 
 // Export all of routes

@@ -8,6 +8,7 @@ var reqSchema = new mongoose.Schema({
     modified     : { type: Date, default: Date.now },
     tags         : [String],
     modules      : [String],
+    category     : [String],
 
 });
 

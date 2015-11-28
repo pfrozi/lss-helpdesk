@@ -1,0 +1,112 @@
+<div class="page-header col-xs-offset-2">
+  <h3>Register your business</h3>
+</div>
+<form id="signup-form" method="POST" class="form-horizontal multiple-form-group">
+  <input type="hidden" name="_csrf">
+  <div class="form-group">
+    <label for="name" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Name</label>
+    <div class="col-xs-6 col-sm-5">
+      <input type="text" name="name" id="name" placeholder="Business name" autofocus="autofocus" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="category" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Category</label>
+    <div class="col-xs-6 col-sm-5">
+      <select class="form-control" name="category" id="category">
+        <option>Psychologist</option>
+        <option>Dentist</option>
+        <option>Vet</option>
+        <option>Lawyer</option>
+        <option>Doctor</option>
+        <option>Financial advisor</option>
+        <option>Plumber</option>
+      </select>
+  	</div>
+  </div>
+  <div class="form-group">
+    <label for="city" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">City</label>
+    <div class="col-xs-6 col-sm-5">
+      <select class="form-control" name="city" id="city">
+        <option>Madrid</option>
+      </select>
+  	</div>
+  </div>
+
+  <div class="form-group">
+    <label for="timetable" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Timetable</label>
+    <div class="col-xs-6 col-sm-5 col-md-8">
+      <div class="row">
+        <div class="col-xs-12 col-md-3">
+            <div class="input-group timetable">
+              <span class="input-group-addon">From</span>
+              <input type="text" name="from['value'][]" class="form-control" placeholder="09:00">
+          </div>
+            <div class="input-group timetable">
+              <span class="input-group-addon">To</span>
+              <input type="text" name="to['value'][]" class="form-control" placeholder="13:00">
+            </div>
+        </div>
+
+        <div class="col-xs-8 col-md-3">
+          <div class="input-group">
+            <span class="input-group-addon">Days</span>
+            <select multiple="" name="days['value'][]" class="form-control">
+              <option>Monday</option>
+              <option>Tuesday</option>
+              <option>Wednesday</option>
+              <option>Thursday</option>
+              <option>Friday</option>
+              <option>Saturday</option>
+              <option>Sunday</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-xs-4 col-md-5">
+        	<button type="button" class="btn btn-success btn-add">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="duration" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Duration</label>
+    <div class="col-xs-6 col-sm-5">
+      <div class="input-group">
+        <input type="number" name="duration" id="duration" placeholder="Appointment duration" class="form-control">
+        <span class="input-group-addon">Minutes</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="price" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Price</label>
+    <div class="col-xs-6 col-sm-5">
+      <div class="input-group">
+        <input type="number" name="price" id="price" placeholder="Appointment price" class="form-control">
+        <span class="input-group-addon">€</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="email" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Email</label>
+    <div class="col-xs-6 col-sm-5">
+      <input type="email" name="email" id="email" placeholder="Email" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="password" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Password</label>
+    <div class="col-xs-6 col-sm-5">
+      <input type="password" name="password" id="password" placeholder="Password" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="confirmPassword" class="col-xs-offset-2 col-xs-2 col-sm-1 control-label">Confirm</label>
+    <div class="col-xs-6 col-sm-5">
+      <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-xs-offset-4 col-sm-offset-3 col-xs-7">
+      <button type="submit" class="btn btn-primary"><span class="ion-person-add"></span>Register</button>
+    </div>
+  </div>
+</form>

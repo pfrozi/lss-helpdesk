@@ -2,22 +2,31 @@ extends ../layout
 
 block content
     
-    h1.
-         #{title}
-    table.table.table-hover
-        thead
-            tr
-                th o
-                th Descrição
-                th Respostas
-                th Visitas
-                th Modificado Em
-        tbody
-            - each req, in reqs
+    script(src='/javascripts/reqs.js')
+    
+    h1 Todas as Solicitações <a class="glyphicon glyphicon-plus pointer" href="/reqs/new" title="Adicionar Solicitação" data-toggle="tooltip"></a>
+    if(reqs)
+        table.table.table-hover
+            thead
                 tr
-                    td o
-                    td 
-                        a(href='/reqs/#{req._id}/show') #{req.description}
-                    td 0
-                    td 0
-                    td #{req.modified}
+                    th 
+                    th Título
+                    th Respostas
+                    th Visitas
+                    th Modificado Em
+            tbody
+                - each req, i in reqs
+                    tr
+                        td 
+                            input.chkSelect(type="checkbox")
+                            input.inputId(type="hidden" value="#{req._id}")
+                        td 
+                            a(href='/reqs/#{req._id}/show') #{req.title}
+                        td 0
+                        td 0
+                        td 
+                            span.dateTimeField #{req.modified}
+    else
+        h3 Nenhuma solicitação encontrada!
+    
+    button.btn.btn-danger.btn-remove#btnSubmit(type="submit") Remover
