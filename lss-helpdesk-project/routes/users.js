@@ -26,6 +26,16 @@ router.route('/')
               if (err) {
                   return console.error(err);
               } else {
+
+                  if(!req.session){
+
+                      res.render('login', {
+                          title: 'Login',
+                          message: "Sessão expirada."
+                        });
+                        return;
+                  }
+
                   var userLog  = req.session.userLog;
                   var userType = req.session.userType;
                   console.log('Logged user.nick: '+ userLog.nick);
