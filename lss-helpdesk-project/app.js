@@ -21,6 +21,7 @@ var db = require("./model/db");
 // mongoose schemas
 var user        = require('./model/users');
 var requisition = require('./model/requisition');
+//var forum       = require('./model/forum');
 
 
 var app = express();

@@ -29,3 +29,6 @@ a {
 .pointer {
     cursor: pointer;
 }
+.btn-remove{
+    margin-bottom: 1em;
+}

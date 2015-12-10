@@ -9,7 +9,8 @@ var reqSchema = new mongoose.Schema({
     tags         : [String],
     modules      : [String],
     category     : [String],
-
+    user         : {type: mongoose.Schema.ObjectId, ref: 'User'},
+    forum        : [{type: mongoose.Schema.ObjectId, ref: 'Forum'}]
 });
 
 mongoose.model('Requisition', reqSchema);

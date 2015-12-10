@@ -25,3 +25,31 @@ function formatDate(dateStr) {
     //var strTime = hours + ':' + minutes;
     //return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
 }
+
+// Function: insertAlertAfter
+//      Use to show messages
+// timeout: time to close the alert
+// type: [warning, success, danger]
+// selector: element used to refer the position
+function insertAlertAfter(timeout, type, selector, title, text){
+
+    var i = parseInt(Math.random()*100000);
+    var id = "alert" + i;
+
+    var html = "<div id='"+ id + "' class='alert alert-"+ type + " alert-dismissible' role='alert'>"
+             + "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+             + "<span aria-hidden='true'>×</span></button><strong>" + title + "</strong>&nbsp;"
+             + text
+             + "</div>";
+
+    $(html).insertAfter(selector);
+
+    $("#" + id).css('display','none');
+
+    $("#" + id).fadeIn(200);
+
+    window.setTimeout(function () {
+        $("#" + id).fadeOut(1000);
+    }, timeout);
+
+}

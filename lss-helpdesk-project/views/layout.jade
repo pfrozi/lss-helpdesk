@@ -16,6 +16,11 @@ html
         script(src='/javascripts/bootstrap-tagsinput.min.js')
         script(src='/javascripts/core.js')
     body
+        footer.footer
+            div.container.text-left
+                p
+                if (userLog)
+                    p.text.muted.credit.small Olá #{userLog.name}!
         if(userLog)
             case userLog.type
                 when 'D'
@@ -23,8 +28,4 @@ html
                 when 'C'
                     include menus/customer
         block content
-        footer.footer
-            div.container.text-left
-                p
-                if (userLog)
-                    p.text.muted.credit Olá #{userLog.name}!
+        

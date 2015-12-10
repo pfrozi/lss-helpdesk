@@ -24,6 +24,17 @@ router.route('/')
 
         var userLog  = req.session.userLog;
 
+        /*
+        if(!req.session || !userLog){
+
+            res.render('login/show', {
+                title: 'Login',
+                message: "Sessão expirada."
+              });
+              return;
+        }
+        */
+
         mongoose.model('Requisition').find({}, function (err, reqs) {
               if (err) {
                   return console.error(err);
@@ -240,20 +251,41 @@ router
 //DELETE a req by ID
 router.get('/:id/delete', function (req, res){
 
-    console.log("test");
+    console.log("Remove a req item...");
 
-    res.format({
-        //HTML returns us back to the main page, or you can create a success page
-          html: function(){
-               res.redirect("/reqs");
-         },
-         //JSON returns the item with the message that is has been deleted
-        json: function(){
-               res.json({message : 'deleted',
-                   item : requisition
-               });
-         }
-      });
+    //find a req by ID
+    mongoose.model('Requisition').findById(req.id, function (err, user) {
+        if(err){
+            return console.error(err);
+        }else{
+            console.log("Id found, deleting process will be start");
+            //remove it from Mongo
+            user.remove(function (err, requisitionRem) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    //Returning success messages saying it was deleted
+                    console.log('DELETE removing ID: ' + requisitionRem._id);
+                    res.format({
+                        //HTML returns us back to the main page, or you can create a success page
+                          html: function(){
+                               res.redirect("/reqs");
+                         },
+                         //JSON returns the item with the message that is has been deleted
+                        json: function(){
+                               res.json({message : 'deleted',
+                                   item : requisitionRem
+                               });
+                         }
+                      });
+                }
+            });
+
+
+        }
+    });
+
+
 /*
     //find user by ID
     mongoose.model('Requisition').findById(req.id, function (err, requisition) {
