@@ -8,6 +8,7 @@ var session      = require('express-session');
 //var MongoStore   = require('connect-mongo')(session);
 var mongoose     = require('mongoose');
 
+
 // controllers
 var routes       = require('./routes/index');
 var users        = require('./routes/users');
@@ -21,7 +22,8 @@ var db = require("./model/db");
 // mongoose schemas
 var user        = require('./model/users');
 var requisition = require('./model/requisition');
-//var forum       = require('./model/forum');
+var forum       = require('./model/forum');
+
 
 
 var app = express();

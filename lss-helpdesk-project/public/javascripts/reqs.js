@@ -2,6 +2,18 @@ $(document).ready(function () {
 
     $('#mnuAllReqs').addClass('active');
 
+    $("#addForum").click(function(){
+
+        $('#myModal').modal('toggle');
+    });
+
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#inputComment').focus();
+    })
+
+    $("#btnSubmitComment").click(function(){
+        $("#formAddComment").submit();
+    });
 
     $('.btn-remove').button().click(function(){
 

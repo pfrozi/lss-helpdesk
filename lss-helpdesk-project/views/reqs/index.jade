@@ -22,8 +22,8 @@ block content
                             input.inputId(type="hidden" value="#{req._id}")
                         td 
                             a(href='/reqs/#{req._id}') #{req.title}
-                        td 0
-                        td 0
+                        td #{req.forum.length}
+                        td #{req.visits}
                         td 
                             span.dateTimeField #{req.modified}
         button.btn.btn-danger.btn-remove#btnSubmit(type="submit") Remover

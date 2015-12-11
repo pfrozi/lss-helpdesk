@@ -60,6 +60,20 @@ router.route('/')
     //POST a new requisition
     //called when the user click in a post button
     .post(function(req, res) {
+
+        var userLog  = req.session.userLog;
+
+        /*
+        if(!req.session || !userLog){
+
+            res.render('login/show', {
+                title: 'Login',
+                message: "Sessão expirada."
+              });
+              return;
+        }
+        */
+
         // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
         var title       = req.body.titulo;
         var description = req.body.descricao;
@@ -86,7 +100,8 @@ router.route('/')
             description : description,
             priority    : 0,
             tags        : partsOfTags,
-            modules     : partsOfModules
+            modules     : partsOfModules,
+            user        : userLog
         }, function (err, requisition) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
@@ -156,24 +171,120 @@ router.param('id', function(req, res, next, id) {
 // just show a requisition
 router.route('/:id')
   .get(function(req, res) {
-    mongoose.model('Requisition').findById(req.id, function (err, requisition) {
-      if (err) {
-        console.log('GET Error: There was a problem retrieving: ' + err);
-      } else {
-        console.log('GET Retrieving ID: ' + requisition._id);
-        res.format({
-          html: function(){
-              res.render('reqs/show', {
-                "requisition" : requisition
-              });
-          },
-          json: function(){
-              res.json(requisition);
-          }
-        });
-      }
+
+    mongoose.model('Requisition').findById(req.id)
+        .populate("user")
+        .populate({path: 'forum', options: { sort: { 'created': -1 } } })
+        .deepPopulate("forum.user")
+        .exec(function (err, requisition) {
+            if (err) {
+                console.log('GET Error: There was a problem retrieving: ' + err);
+            } else {
+                console.log('GET Retrieving ID: ' + requisition._id);
+
+                var userLog  = req.session.userLog;
+
+                // update visits field
+                requisition.update({ visits : ++requisition.visits}, function (err, userUp) {
+                    if (err) {
+                        res.send("Error on visits update.");
+                    } else {
+
+                        res.format({
+                            html: function(){
+                                res.render('reqs/show', {
+                                    "req" : requisition,
+                                    "userLog": userLog
+                                });
+                            },
+                            json: function(){
+                                res.json(requisition);
+                            }
+                        });
+                    }
+
+                });
+            }
     });
-  });
+}).post(function(req, res) {
+
+    var userLog  = req.session.userLog;
+
+    var comment  = req.body.comment;
+    var tags     = req.body.tags;
+
+    console.log(comment);
+    console.log(tags);
+
+    var partsOfTags    = tags.split(',');
+
+    console.log(partsOfTags);
+
+    //call the create function for our database
+    mongoose.model('Forum').create({
+        comment     : comment,
+        tags        : partsOfTags,
+        user        : userLog
+    }, function (err, forum) {
+        if (err) {
+            res.send("There was a problem adding the information to the database.");
+        } else {
+            //user has been created
+            console.log('POST creating new forum: ' + forum);
+
+            mongoose.model('Requisition').findByIdAndUpdate(req.id,
+                    {$push: {"forum": forum}},
+                    {safe: true, upsert: true})
+                .exec(function (err, requisition) {
+                    if (err) {
+                        console.log('GET Error: There was a problem retrieving: ' + err);
+                    } else {
+                        mongoose.model('Requisition').findById(req.id)
+                            .populate("user")
+                            .populate({path: 'forum', options: { sort: { 'created': -1 } } })
+                            .deepPopulate("forum.user")
+                            .exec(function (err, requisition) {
+                                if (err) {
+                                    console.log('GET Error: There was a problem retrieving: ' + err);
+                                } else {
+                                    console.log('GET Retrieving ID: ' + requisition._id);
+
+                                    var userLog  = req.session.userLog;
+
+                                    // update visits field
+                                    requisition.update({ visits : ++requisition.visits}, function (err, userUp) {
+                                        if (err) {
+                                            res.send("Error on visits update.");
+                                        } else {
+
+                                            res.format({
+                                                html: function(){
+                                                    res.render('reqs/show', {
+                                                        "req" : requisition,
+                                                        "userLog": userLog
+                                                    });
+                                                },
+                                                json: function(){
+                                                    res.json(requisition);
+                                                }
+                                            });
+                                        }
+
+                                    });
+                                }
+                        });
+                    }
+            });
+
+
+        }
+    });
+
+
+
+});
+
+
 
 //GET the individual item by Mongo ID
 router

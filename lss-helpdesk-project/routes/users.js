@@ -99,7 +99,8 @@ router.route('/')
 
 /* GET New user page. */
 router.get('/new', function(req, res) {
-    res.render('users/new', { title: 'Add New User' });
+    var userLog  = req.session.userLog;
+    res.render('users/new', { title: 'Add New User', "userLog" : userLog });
 });
 
 // route middleware to validate :id
@@ -155,6 +156,9 @@ router.route('/:id')
 //GET the individual item by Mongo ID
 router
     .get('/:id/edit', function(req, res) {
+
+      var userLog  = req.session.userLog;
+
       //search for the user within Mongo
       mongoose.model('User').findById(req.id, function (err, user) {
           if (err) {
@@ -167,7 +171,8 @@ router
                   //HTML response will render the 'edit.jade' template
                   html: function(){
                          res.render('users/edit', {
-                            user: user
+                            user: user,
+                            "userLog":userLog
                         });
                    },
                    //JSON response will return the JSON output
@@ -186,6 +191,8 @@ router
         var password = req.body.password;
         var tp       = req.body.type;
 
+        var userLog  = req.session.userLog;
+
         mongoose.model('User').findById(req.id, function (err, user) {
               if (err) {
                   res.send("There was a problem adding the information to the database.");
@@ -201,12 +208,13 @@ router
                                 res.send("There was a problem adding the information to the database.");
                             } else {
 
-                                mongoose.model('User').findById(req.id, function(err, newUser) {
+                                mongoose.model('User').find({}, function (err, users) {
                                     console.log('PUT editing new user: ' + userUp);
                                     res.format({
                                       html: function(){
-                                          res.render('users/show', {
-                                            "user" : newUser
+                                          res.render('users', {
+                                            "users" : users
+                                           ,"userLog": userLog
                                           });
                                       },
                                       json: function(){

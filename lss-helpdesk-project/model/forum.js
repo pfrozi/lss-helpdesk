@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var reqSchema = new mongoose.Schema({
+var forumSchema = new mongoose.Schema({
     user         : {type: mongoose.Schema.ObjectId, ref: 'User'},
     comment      : String,
     tags         : [String],
@@ -8,4 +8,4 @@ var reqSchema = new mongoose.Schema({
     modified     : { type: Date, default: Date.now },
 });
 
-mongoose.model('Forum', reqSchema);
+mongoose.model('Forum', forumSchema);
